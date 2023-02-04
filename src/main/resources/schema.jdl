@@ -1,0 +1,64 @@
+
+//
+// An entity model for an online shop
+//
+
+application {
+    config {
+        baseName splitwise,
+        prodDatabaseType postgresql,
+        devDatabaseType h2Disk
+    }
+}
+
+enum Currency {
+    PLN, EUR, USD, CZK
+}
+
+enum Subcategory{
+    HOME,LIFE, TRANSPORT, FOOD_DRINK, ENTERTAINMENT
+}
+
+entity Category{
+    description String required
+    subcategory Subcategory required
+}
+
+entity Expense {
+    description String required,
+    currency Currency required
+    dateAdded LocalDate,
+    dateModified LocalDate,
+    category Category,
+    note String,
+    group Group
+}
+
+entity Group {
+    title String required,
+    description String,
+    dateAdded LocalDate,
+    dateModified LocalDate,
+    users User
+}
+
+entity Customer {
+    firstName String,
+    lastName String,
+    email String,
+    telephone String
+}
+
+relationship OneToMany {
+    Group{users} to User
+}
+relationship OneToOne{
+    Expense{category} to Category
+}
+relationship ManyToOne {
+    Expense{group} to Group
+}
+
+service all with serviceClass
+dto * with mapstruct
+
